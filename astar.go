@@ -9,14 +9,21 @@ import (
 	"container/heap"
 )
 
+// Node represents a node in a graph and can be anything.
 type Node interface{}
 
+// The Graph interface is the minimal interface a graph data structure
+// must satisfy to be suitable for the A* algorithm.
 type Graph interface {
+	// Neighbours returns the neighbour nodes of node n in the graph.
 	Neighbours(n Node) []Node
 }
 
+// A CostFunc is a function that returns a cost for the transition
+// from node a to node b.
 type CostFunc func(a, b Node) float64
 
+// A Path is a sequence of nodes in a graph.
 type Path []Node
 
 func newPath(start Node) Path {
@@ -34,6 +41,8 @@ func (p Path) cont(n Node) Path {
 	return newPath
 }
 
+// Cost calculates the total cost of path p by applying the cost function d
+// to all path segments and returning the sum.
 func (p Path) Cost(d CostFunc) (c float64) {
 	for i := 1; i < len(p); i++ {
 		c += d(p[i-1], p[i])
