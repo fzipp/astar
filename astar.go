@@ -61,21 +61,21 @@ func FindPath(g Graph, start, dest Node, d, h CostFunc) Path {
 
 	for pq.Len() > 0 {
 		p := heap.Pop(pq).(*item).value.(Path)
-		if closed[p.last()] {
+		n := p.last()
+		if closed[n] {
 			continue
 		}
-		if p.last() == dest {
+		if n == dest {
 			// Path found
 			return p
 		}
-		n := p.last()
 		closed[n] = true
 
 		for _, nb := range g.Neighbours(n) {
 			newPath := p.cont(nb)
 			heap.Push(pq, &item{
 				value:    newPath,
-				priority: newPath.Cost(d) + h(nb, dest),
+				priority: -(newPath.Cost(d) + h(nb, dest)),
 			})
 		}
 	}

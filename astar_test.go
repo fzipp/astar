@@ -42,7 +42,7 @@ func TestFindPath(t *testing.T) {
 
 	want := Path{
 		image.Pt(2, 3),
-		image.Pt(1, 7),
+		image.Pt(1, 6),
 		image.Pt(5, 6),
 	}
 
