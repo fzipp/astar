@@ -26,14 +26,19 @@ type CostFunc func(a, b Node) float64
 // A Path is a sequence of nodes in a graph.
 type Path []Node
 
+// newPath creates a new path with one start node. More nodes can be
+// added with append().
 func newPath(start Node) Path {
 	return []Node{start}
 }
 
+// last returns the last node of path p. It is not removed from the path.
 func (p Path) last() Node {
 	return p[len(p)-1]
 }
 
+// cont creates a new path, which is a continuation of path p with the
+// additional node n.
 func (p Path) cont(n Node) Path {
 	newPath := make([]Node, len(p), len(p)+1)
 	copy(newPath, p)

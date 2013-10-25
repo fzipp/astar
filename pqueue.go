@@ -40,8 +40,8 @@ type priorityQueue []*item
 func (pq priorityQueue) Len() int { return len(pq) }
 
 func (pq priorityQueue) Less(i, j int) bool {
-	// We want Pop to give us the highest, not lowest,
-	// priority so we use greater than here.
+	// We want heap.Pop to give us the item with the highest,
+	// not lowest, priority so we use greater than here.
 	return pq[i].priority > pq[j].priority
 }
 
@@ -50,8 +50,7 @@ func (pq priorityQueue) Swap(i, j int) {
 }
 
 func (pq *priorityQueue) Push(x interface{}) {
-	item := x.(*item)
-	*pq = append(*pq, item)
+	*pq = append(*pq, x.(*item))
 }
 
 func (pq *priorityQueue) Pop() interface{} {
