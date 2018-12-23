@@ -8,18 +8,21 @@ import (
 	"github.com/fzipp/astar"
 )
 
+// graph is represented by an adjacency list.
 type graph map[astar.Node][]astar.Node
 
 func newGraph() graph {
 	return make(map[astar.Node][]astar.Node)
 }
 
+// Link creates a bidirected edge between nodes a and b.
 func (g graph) Link(a, b astar.Node) graph {
 	g[a] = append(g[a], b)
 	g[b] = append(g[b], a)
 	return g
 }
 
+// Neighbours returns the neighbour nodes of node n in the graph.
 func (g graph) Neighbours(n astar.Node) []astar.Node {
 	return g[n]
 }
@@ -34,7 +37,7 @@ func nodeDist(a, b astar.Node) float64 {
 }
 
 func ExampleFindPath() {
-	// Create a graph with points as nodes
+	// Create a graph with 2D points as nodes
 	a := image.Pt(2, 3)
 	b := image.Pt(1, 7)
 	c := image.Pt(1, 6)
