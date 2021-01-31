@@ -1,4 +1,0 @@
-Package astar implements the A* shortest path finding algorithm.
-
-Documentation:
-  https://pkg.go.dev/github.com/fzipp/astar

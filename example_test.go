@@ -15,8 +15,8 @@ func newGraph() graph {
 	return make(map[astar.Node][]astar.Node)
 }
 
-// Link creates a bidirected edge between nodes a and b.
-func (g graph) Link(a, b astar.Node) graph {
+// link creates a bi-directed edge between nodes a and b.
+func (g graph) link(a, b astar.Node) graph {
 	g[a] = append(g[a], b)
 	g[b] = append(g[b], a)
 	return g
@@ -28,7 +28,7 @@ func (g graph) Neighbours(n astar.Node) []astar.Node {
 }
 
 // nodeDist is our cost function. We use points as nodes, so we
-// calculate their euclidian distance.
+// calculate their Euclidean distance.
 func nodeDist(a, b astar.Node) float64 {
 	p := a.(image.Point)
 	q := b.(image.Point)
@@ -42,7 +42,7 @@ func ExampleFindPath() {
 	b := image.Pt(1, 7)
 	c := image.Pt(1, 6)
 	d := image.Pt(5, 6)
-	g := newGraph().Link(a, b).Link(a, c).Link(b, c).Link(b, d).Link(c, d)
+	g := newGraph().link(a, b).link(a, c).link(b, c).link(b, d).link(c, d)
 
 	// Find the shortest path from a to d
 	p := astar.FindPath(g, a, d, nodeDist, nodeDist)
