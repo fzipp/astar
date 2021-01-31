@@ -158,25 +158,25 @@ import (
 	"github.com/fzipp/astar"
 )
 
-func main() {
-  // Create a graph with 2D points as nodes
-  a := image.Pt(2, 3)
-  b := image.Pt(1, 7)
-  c := image.Pt(1, 6)
-  d := image.Pt(5, 6)
-  g := newGraph().link(a, b).link(a, c).link(b, c).link(b, d).link(c, d)
+func main() { 
+	// Create a graph with 2D points as nodes
+	a := image.Pt(2, 3)
+	b := image.Pt(1, 7)
+	c := image.Pt(1, 6)
+	d := image.Pt(5, 6)
+	g := newGraph().link(a, b).link(a, c).link(b, c).link(b, d).link(c, d)
 
-  // Find the shortest path from a to d
-  p := astar.FindPath(g, a, d, nodeDist, nodeDist)
+	// Find the shortest path from a to d
+	p := astar.FindPath(g, a, d, nodeDist, nodeDist)
 
-  // Output the result
-  if p == nil {
-    fmt.Println("No path found.")
-    return
-  }
-  for i, n := range p {
-    fmt.Printf("%d: %s\n", i, n)
-  }
+	// Output the result
+	if p == nil {
+		fmt.Println("No path found.")
+		return
+	}
+	for i, n := range p {
+		fmt.Printf("%d: %s\n", i, n)
+	}
 }
 
 // graph is represented by an adjacency list.
