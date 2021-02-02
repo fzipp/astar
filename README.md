@@ -1,6 +1,7 @@
 # astar
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/fzipp/astar)](https://pkg.go.dev/github.com/fzipp/astar)
+![Build Status](https://github.com/fzipp/astar/workflows/build/badge.svg)
 [![Go Report Card](https://goreportcard.com/badge/github.com/fzipp/astar)](https://goreportcard.com/report/github.com/fzipp/astar)
 
 Package astar implements the
