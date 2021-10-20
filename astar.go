@@ -5,41 +5,36 @@
 // Package astar implements the A* shortest path finding algorithm.
 package astar
 
-import (
-	"container/heap"
-)
-
-// Node represents a node in a graph and can be anything.
-type Node interface{}
+import "container/heap"
 
 // The Graph interface is the minimal interface a graph data structure
 // must satisfy to be suitable for the A* algorithm.
-type Graph interface {
+type Graph[Node any] interface {
 	// Neighbours returns the neighbour nodes of node n in the graph.
 	Neighbours(n Node) []Node
 }
 
 // A CostFunc is a function that returns a cost for the transition
 // from node a to node b.
-type CostFunc func(a, b Node) float64
+type CostFunc[Node any] func(a, b Node) float64
 
 // A Path is a sequence of nodes in a graph.
-type Path []Node
+type Path[Node any] []Node
 
 // newPath creates a new path with one start node. More nodes can be
 // added with append().
-func newPath(start Node) Path {
+func newPath[Node any](start Node) Path[Node] {
 	return []Node{start}
 }
 
 // last returns the last node of path p. It is not removed from the path.
-func (p Path) last() Node {
+func (p Path[Node]) last() Node {
 	return p[len(p)-1]
 }
 
 // cont creates a new path, which is a continuation of path p with the
 // additional node n.
-func (p Path) cont(n Node) Path {
+func (p Path[Node]) cont(n Node) Path[Node] {
 	newPath := make([]Node, len(p), len(p)+1)
 	copy(newPath, p)
 	newPath = append(newPath, n)
@@ -48,7 +43,7 @@ func (p Path) cont(n Node) Path {
 
 // Cost calculates the total cost of path p by applying the cost function d
 // to all path segments and returning the sum.
-func (p Path) Cost(d CostFunc) (c float64) {
+func (p Path[Node]) Cost(d CostFunc[Node]) (c float64) {
 	for i := 1; i < len(p); i++ {
 		c += d(p[i-1], p[i])
 	}
@@ -57,15 +52,15 @@ func (p Path) Cost(d CostFunc) (c float64) {
 
 // FindPath finds the shortest path between start and dest in graph g
 // using the cost function d and the cost heuristic function h.
-func FindPath(g Graph, start, dest Node, d, h CostFunc) Path {
+func FindPath[Node comparable](g Graph[Node], start, dest Node, d, h CostFunc[Node]) Path[Node] {
 	closed := make(map[Node]bool)
 
-	pq := &priorityQueue{}
+	pq := &priorityQueue[Path[Node]]{}
 	heap.Init(pq)
-	heap.Push(pq, &item{value: newPath(start)})
+	heap.Push(pq, &item[Path[Node]]{value: newPath(start)})
 
 	for pq.Len() > 0 {
-		p := heap.Pop(pq).(*item).value.(Path)
+		p := heap.Pop(pq).(*item[Path[Node]]).value
 		n := p.last()
 		if closed[n] {
 			continue
@@ -78,7 +73,7 @@ func FindPath(g Graph, start, dest Node, d, h CostFunc) Path {
 
 		for _, nb := range g.Neighbours(n) {
 			newPath := p.cont(nb)
-			heap.Push(pq, &item{
+			heap.Push(pq, &item[Path[Node]]{
 				value:    newPath,
 				priority: -(newPath.Cost(d) + h(nb, dest)),
 			})

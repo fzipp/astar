@@ -10,19 +10,19 @@ import (
 )
 
 func TestPushPop(t *testing.T) {
-	pq := &priorityQueue{}
+	pq := &priorityQueue[string]{}
 	heap.Init(pq)
 
 	want := "ebdac"
-	heap.Push(pq, &item{value: "a", priority: 1.2})
-	heap.Push(pq, &item{value: "b", priority: 5})
-	heap.Push(pq, &item{value: "c", priority: -0.4})
-	heap.Push(pq, &item{value: "d", priority: 3.7})
-	heap.Push(pq, &item{value: "e", priority: 11})
+	heap.Push(pq, &item[string]{value: "a", priority: 1.2})
+	heap.Push(pq, &item[string]{value: "b", priority: 5})
+	heap.Push(pq, &item[string]{value: "c", priority: -0.4})
+	heap.Push(pq, &item[string]{value: "d", priority: 3.7})
+	heap.Push(pq, &item[string]{value: "e", priority: 11})
 
 	s := ""
 	for pq.Len() > 0 {
-		s += heap.Pop(pq).(*item).value.(string)
+		s += heap.Pop(pq).(*item[string]).value
 	}
 
 	if s != want {

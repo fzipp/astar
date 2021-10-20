@@ -14,10 +14,10 @@ func ExampleFindPath() {
 	b := image.Pt(1, 7)
 	c := image.Pt(1, 6)
 	d := image.Pt(5, 6)
-	g := newGraph().link(a, b).link(a, c).link(b, c).link(b, d).link(c, d)
+	g := newGraph[image.Point]().link(a, b).link(a, c).link(b, c).link(b, d).link(c, d)
 
 	// Find the shortest path from a to d
-	p := astar.FindPath(g, a, d, nodeDist, nodeDist)
+	p := astar.FindPath[image.Point](g, a, d, nodeDist, nodeDist)
 
 	// Output the result
 	if p == nil {
@@ -35,28 +35,26 @@ func ExampleFindPath() {
 
 // nodeDist is our cost function. We use points as nodes, so we
 // calculate their Euclidean distance.
-func nodeDist(a, b astar.Node) float64 {
-	p := a.(image.Point)
-	q := b.(image.Point)
+func nodeDist(p, q image.Point) float64 {
 	d := q.Sub(p)
 	return math.Sqrt(float64(d.X*d.X + d.Y*d.Y))
 }
 
 // graph is represented by an adjacency list.
-type graph map[astar.Node][]astar.Node
+type graph[Node comparable] map[Node][]Node
 
-func newGraph() graph {
-	return make(map[astar.Node][]astar.Node)
+func newGraph[Node comparable]() graph[Node] {
+	return make(map[Node][]Node)
 }
 
 // link creates a bi-directed edge between nodes a and b.
-func (g graph) link(a, b astar.Node) graph {
+func (g graph[Node]) link(a, b Node) graph[Node] {
 	g[a] = append(g[a], b)
 	g[b] = append(g[b], a)
 	return g
 }
 
 // Neighbours returns the neighbour nodes of node n in the graph.
-func (g graph) Neighbours(n astar.Node) []astar.Node {
+func (g graph[Node]) Neighbours(n Node) []Node {
 	return g[n]
 }

@@ -29,31 +29,31 @@
 package astar
 
 // An item is something we manage in a priority queue.
-type item struct {
-	value    interface{} // The value of the item; arbitrary.
-	priority float64     // The priority of the item in the queue.
+type item[T any] struct {
+	value    T       // The value of the item; arbitrary.
+	priority float64 // The priority of the item in the queue.
 }
 
 // A priorityQueue implements heap.Interface and holds items.
-type priorityQueue []*item
+type priorityQueue[T any] []*item[T]
 
-func (pq priorityQueue) Len() int { return len(pq) }
+func (pq priorityQueue[T]) Len() int { return len(pq) }
 
-func (pq priorityQueue) Less(i, j int) bool {
+func (pq priorityQueue[T]) Less(i, j int) bool {
 	// We want heap.Pop to give us the item with the highest,
 	// not lowest, priority so we use greater than here.
 	return pq[i].priority > pq[j].priority
 }
 
-func (pq priorityQueue) Swap(i, j int) {
+func (pq priorityQueue[T]) Swap(i, j int) {
 	pq[i], pq[j] = pq[j], pq[i]
 }
 
-func (pq *priorityQueue) Push(x interface{}) {
-	*pq = append(*pq, x.(*item))
+func (pq *priorityQueue[T]) Push(x interface{}) {
+	*pq = append(*pq, x.(*item[T]))
 }
 
-func (pq *priorityQueue) Pop() interface{} {
+func (pq *priorityQueue[T]) Pop() interface{} {
 	old := *pq
 	n := len(old)
 	item := old[n-1]
