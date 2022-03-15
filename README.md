@@ -11,8 +11,9 @@ Package astar implements the
 
 In order to use the `astar.FindPath` function to find the shortest path
 between two nodes of a graph you need a graph data structure that implements
-the `Neighbours` method to  satisfy the `astar.Graph` interface, and a cost
-function. It is up to you how the graph is internally implemented.
+the `Neighbours` method to  satisfy the `astar.Graph[Node]` interface (with
+`Node` = `image.Point`), and a cost function. It is up to you how the graph
+is internally implemented.
 
 ### A maze
 
@@ -79,7 +80,7 @@ func nodeDist(p, q image.Point) float64 {
 
 type graph []string
 
-// Neighbours implements the astar.Graph interface
+// Neighbours implements the astar.Graph[Node] interface (with Node = image.Point).
 func (g graph) Neighbours(p image.Point) []image.Point {
 	offsets := []image.Point{
 		image.Pt(0, -1), // North
