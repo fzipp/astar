@@ -18,7 +18,7 @@ function. It is up to you how the graph is internally implemented.
 
 In this example the graph is represented by a slice of strings, each character
 representing a cell of a floor plan. Graph nodes are cell positions
-as `image.Point` values, with (0, 0) at the upper left corner. 
+as `image.Point` values, with (0, 0) in the upper left corner. 
 Spaces represent free cells available for walking, other characters like
 `#` represent walls.
 The `Neighbours` method returns the positions of the adjacent free cells
@@ -61,20 +61,18 @@ func main() {
 	dest := image.Pt(13, 1)  // Top right corner
 
 	// Find the shortest path
-	path := astar.FindPath(maze, start, dest, nodeDist, nodeDist)
-	
+	path := astar.FindPath[image.Point](maze, start, dest, nodeDist, nodeDist)
+
 	// Mark the path with dots before printing
 	for _, p := range path {
-		maze.put(p.(image.Point), '.')
+		maze.put(p, '.')
 	}
 	maze.print()
 }
 
 // nodeDist is our cost function. We use points as nodes, so we
 // calculate their Euclidean distance.
-func nodeDist(a, b astar.Node) float64 {
-	p := a.(image.Point)
-	q := b.(image.Point)
+func nodeDist(p, q image.Point) float64 {
 	d := q.Sub(p)
 	return math.Sqrt(float64(d.X*d.X + d.Y*d.Y))
 }
@@ -82,15 +80,14 @@ func nodeDist(a, b astar.Node) float64 {
 type graph []string
 
 // Neighbours implements the astar.Graph interface
-func (g graph) Neighbours(n astar.Node) []astar.Node {
-	p := n.(image.Point)
+func (g graph) Neighbours(p image.Point) []image.Point {
 	offsets := []image.Point{
 		image.Pt(0, -1), // North
 		image.Pt(1, 0),  // East
 		image.Pt(0, 1),  // South
 		image.Pt(-1, 0), // West
 	}
-	res := make([]astar.Node, 0, 4)
+	res := make([]image.Point, 0, 4)
 	for _, off := range offsets {
 		q := p.Add(off)
 		if g.isFreeAt(q) {
@@ -159,7 +156,7 @@ import (
 	"github.com/fzipp/astar"
 )
 
-func main() { 
+func main() {
 	// Create a graph with 2D points as nodes
 	a := image.Pt(2, 3)
 	b := image.Pt(1, 7)
@@ -168,7 +165,7 @@ func main() {
 	g := newGraph().link(a, b).link(a, c).link(b, c).link(b, d).link(c, d)
 
 	// Find the shortest path from a to d
-	p := astar.FindPath(g, a, d, nodeDist, nodeDist)
+	p := astar.FindPath[image.Point](g, a, d, nodeDist, nodeDist)
 
 	// Output the result
 	if p == nil {
@@ -181,29 +178,27 @@ func main() {
 }
 
 // graph is represented by an adjacency list.
-type graph map[astar.Node][]astar.Node
+type graph map[image.Point][]image.Point
 
 func newGraph() graph {
-	return make(map[astar.Node][]astar.Node)
+	return make(map[image.Point][]image.Point)
 }
 
 // link creates a bi-directed edge between nodes a and b.
-func (g graph) link(a, b astar.Node) graph {
+func (g graph) link(a, b image.Point) graph {
 	g[a] = append(g[a], b)
 	g[b] = append(g[b], a)
 	return g
 }
 
 // Neighbours returns the neighbour nodes of node n in the graph.
-func (g graph) Neighbours(n astar.Node) []astar.Node {
+func (g graph) Neighbours(n image.Point) []image.Point {
 	return g[n]
 }
 
 // nodeDist is our cost function. We use points as nodes, so we
 // calculate their Euclidean distance.
-func nodeDist(a, b astar.Node) float64 {
-	p := a.(image.Point)
-	q := b.(image.Point)
+func nodeDist(p, q image.Point) float64 {
 	d := q.Sub(p)
 	return math.Sqrt(float64(d.X*d.X + d.Y*d.Y))
 }
