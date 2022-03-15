@@ -11,9 +11,8 @@ Package astar implements the
 
 In order to use the `astar.FindPath` function to find the shortest path
 between two nodes of a graph you need a graph data structure that implements
-the `Neighbours` method to  satisfy the `astar.Graph[Node]` interface (with
-`Node` = `image.Point`), and a cost function. It is up to you how the graph
-is internally implemented.
+the `Neighbours` method to  satisfy the `astar.Graph[Node]` interface and a
+cost function. It is up to you how the graph is internally implemented.
 
 ### A maze
 
