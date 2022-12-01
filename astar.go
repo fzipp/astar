@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package astar implements the A* shortest path finding algorithm.
+// Package astar implements the A* search algorithm for finding least-cost paths.
 package astar
 
 import "container/heap"
@@ -50,7 +50,7 @@ func (p Path[Node]) Cost(d CostFunc[Node]) (c float64) {
 	return c
 }
 
-// FindPath finds the shortest path between start and dest in graph g
+// FindPath finds the least-cost path between start and dest in graph g
 // using the cost function d and the cost heuristic function h.
 func FindPath[Node comparable](g Graph[Node], start, dest Node, d, h CostFunc[Node]) Path[Node] {
 	closed := make(map[Node]bool)

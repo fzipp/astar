@@ -5,13 +5,14 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/fzipp/astar)](https://goreportcard.com/report/github.com/fzipp/astar)
 
 Package astar implements the
-[A* shortest path finding algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm).
+[A* search algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm)
+for finding least-cost paths.
 
 ## Examples
 
-In order to use the `astar.FindPath` function to find the shortest path
+In order to use the `astar.FindPath` function to find the least-cost path
 between two nodes of a graph you need a graph data structure that implements
-the `Neighbours` method to  satisfy the `astar.Graph[Node]` interface and a
+the `Neighbours` method to satisfy the `astar.Graph[Node]` interface and a
 cost function. It is up to you how the graph is internally implemented.
 
 ### A maze
