@@ -146,6 +146,8 @@ creates a bi-directed edge between a pair of nodes.
 The cost function `nodeDist` calculates the Euclidean distance
 between two points (nodes).
 
+![Example graph with shortst path](doc/example1.png?raw=true)
+
 ```go
 package main
 
@@ -157,16 +159,29 @@ import (
 	"github.com/fzipp/astar"
 )
 
-func main() {
+func main() { 
 	// Create a graph with 2D points as nodes
-	a := image.Pt(2, 3)
-	b := image.Pt(1, 7)
-	c := image.Pt(1, 6)
-	d := image.Pt(5, 6)
-	g := newGraph().link(a, b).link(a, c).link(b, c).link(b, d).link(c, d)
+	p1 := image.Pt(3, 1)
+	p2 := image.Pt(1, 2)
+	p3 := image.Pt(2, 4)
+	p4 := image.Pt(4, 5)
+	p5 := image.Pt(4, 3)
+	p6 := image.Pt(5, 1)
+	p7 := image.Pt(8, 4)
+	p8 := image.Pt(8, 3)
+	p9 := image.Pt(6, 3)
+	g := newGraph[image.Point]().
+		link(p1, p2).link(p1, p3).
+		link(p2, p3).link(p2, p4).
+		link(p3, p4).link(p3, p5).
+		link(p4, p6).link(p4, p7).
+		link(p5, p7).
+		link(p6, p9).
+		link(p7, p8).
+		link(p8, p9)
 
-	// Find the shortest path from a to d
-	p := astar.FindPath[image.Point](g, a, d, nodeDist, nodeDist)
+	// Find the shortest path from p1 to p9
+	p := astar.FindPath[image.Point](g, p1, p9, nodeDist, nodeDist)
 
 	// Output the result
 	if p == nil {
@@ -208,9 +223,11 @@ func nodeDist(p, q image.Point) float64 {
 Output:
 
 ```
-0: (2,3)
-1: (1,6)
-2: (5,6)
+0: (3,1)
+1: (2,4)
+2: (4,5)
+3: (5,1)
+4: (6,3)
 ```
 
 ## License
