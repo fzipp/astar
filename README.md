@@ -193,30 +193,30 @@ func main() {
 	}
 }
 
-// graph is represented by an adjacency list.
-type graph map[image.Point][]image.Point
+// nodeDist is our cost function. We use points as nodes, so we
+// calculate their Euclidean distance.
+func nodeDist(p, q image.Point) float64 {
+	d := q.Sub(p)
+	return math.Sqrt(float64(d.X*d.X + d.Y*d.Y))
+}
 
-func newGraph() graph {
-	return make(map[image.Point][]image.Point)
+// graph is represented by an adjacency list.
+type graph[Node comparable] map[Node][]Node
+
+func newGraph[Node comparable]() graph[Node] {
+	return make(map[Node][]Node)
 }
 
 // link creates a bi-directed edge between nodes a and b.
-func (g graph) link(a, b image.Point) graph {
+func (g graph[Node]) link(a, b Node) graph[Node] {
 	g[a] = append(g[a], b)
 	g[b] = append(g[b], a)
 	return g
 }
 
 // Neighbours returns the neighbour nodes of node n in the graph.
-func (g graph) Neighbours(n image.Point) []image.Point {
+func (g graph[Node]) Neighbours(n Node) []Node {
 	return g[n]
-}
-
-// nodeDist is our cost function. We use points as nodes, so we
-// calculate their Euclidean distance.
-func nodeDist(p, q image.Point) float64 {
-	d := q.Sub(p)
-	return math.Sqrt(float64(d.X*d.X + d.Y*d.Y))
 }
 ```
 
