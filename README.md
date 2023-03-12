@@ -103,7 +103,7 @@ func (g graph) isFreeAt(p image.Point) bool {
 }
 
 func (g graph) isInBounds(p image.Point) bool {
-	return p.Y >= 0 && p.X >= 0 && p.Y < len(g) && p.X < len(g[p.Y])
+	return (0 <= p.X && p.X < len(g[p.Y])) && (0 <= p.Y && p.Y < len(g))
 }
 
 func (g graph) put(p image.Point, c rune) {

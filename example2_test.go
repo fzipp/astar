@@ -68,7 +68,7 @@ func distance(p, q image.Point) float64 {
 
 type floorPlan []string
 
-// Neighbours implements the astar.Graph interface
+// Neighbours implements the astar.Graph[Node] interface (with Node = image.Point).
 func (f floorPlan) Neighbours(p image.Point) []image.Point {
 	offsets := []image.Point{
 		image.Pt(0, -1), // North
@@ -91,7 +91,7 @@ func (f floorPlan) isFreeAt(p image.Point) bool {
 }
 
 func (f floorPlan) isInBounds(p image.Point) bool {
-	return p.Y >= 0 && p.X >= 0 && p.Y < len(f) && p.X < len(f[p.Y])
+	return (0 <= p.X && p.X < len(f[p.Y])) && (0 <= p.Y && p.Y < len(f))
 }
 
 func (f floorPlan) put(p image.Point, c rune) {

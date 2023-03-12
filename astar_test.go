@@ -2,55 +2,62 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package astar
+package astar_test
 
 import (
 	"image"
-	"math"
+	"reflect"
 	"testing"
+
+	"github.com/fzipp/astar"
 )
-
-type graph[Node comparable] map[Node][]Node
-
-func newGraph[Node comparable]() graph[Node] {
-	return make(map[Node][]Node)
-}
-
-func (g graph[Node]) Link(a, b Node) graph[Node] {
-	g[a] = append(g[a], b)
-	g[b] = append(g[b], a)
-	return g
-}
-
-func (g graph[Node]) Neighbours(n Node) []Node {
-	return g[n]
-}
-
-func nodeDist(p, q image.Point) float64 {
-	d := q.Sub(p)
-	return math.Sqrt(float64(d.X*d.X + d.Y*d.Y))
-}
 
 func TestFindPath(t *testing.T) {
 	a := image.Pt(2, 3)
 	b := image.Pt(1, 7)
 	c := image.Pt(1, 6)
 	d := image.Pt(5, 6)
-	g := newGraph[image.Point]().Link(a, b).Link(a, c).Link(b, d).Link(c, d)
 
-	want := Path[image.Point]{
-		image.Pt(2, 3),
-		image.Pt(1, 6),
-		image.Pt(5, 6),
+	tests := []struct {
+		name  string
+		graph graph[image.Point]
+		start image.Point
+		dest  image.Point
+		want  astar.Path[image.Point]
+	}{
+		{
+			name: "find simple path",
+			graph: newGraph[image.Point]().
+				link(a, b).link(a, c).
+				link(b, d).
+				link(c, d),
+			start: a,
+			dest:  d,
+			want: astar.Path[image.Point]{
+				image.Pt(2, 3),
+				image.Pt(1, 6),
+				image.Pt(5, 6),
+			},
+		},
+		{
+			name: "find no path",
+			graph: newGraph[image.Point]().
+				link(a, b).link(a, c).
+				link(b, d).
+				link(c, d),
+			start: a,
+			dest:  image.Pt(1, 1),
+			want:  nil,
+		},
 	}
 
-	p := FindPath[image.Point](g, a, d, nodeDist, nodeDist)
-	if len(p) != len(want) {
-		t.Errorf("Returned path has %d nodes, want %d nodes.", len(p), len(want))
-	}
-	for i, n := range p {
-		if n != want[i] {
-			t.Errorf("Node %d of path is %v, want %v.", i, n, want[i])
-		}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := astar.FindPath[image.Point](tt.graph, tt.start, tt.dest, nodeDist, nodeDist)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("\ngraph = %v\nFindPath(graph, %v, %v, nodeDist, nodeDist) = %v, want %v",
+					tt.graph, tt.start, tt.dest, got, tt.want)
+			}
+		})
 	}
 }
