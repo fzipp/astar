@@ -35,10 +35,10 @@ func (p Path[Node]) last() Node {
 // cont creates a new path, which is a continuation of path p with the
 // additional node n.
 func (p Path[Node]) cont(n Node) Path[Node] {
-	newPath := make([]Node, len(p), len(p)+1)
-	copy(newPath, p)
-	newPath = append(newPath, n)
-	return newPath
+	cp := make([]Node, len(p), len(p)+1)
+	copy(cp, p)
+	cp = append(cp, n)
+	return cp
 }
 
 // Cost calculates the total cost of path p by applying the cost function d
@@ -72,10 +72,10 @@ func FindPath[Node comparable](g Graph[Node], start, dest Node, d, h CostFunc[No
 		closed[n] = true
 
 		for _, nb := range g.Neighbours(n) {
-			newPath := p.cont(nb)
+			cp := p.cont(nb)
 			heap.Push(pq, &item[Path[Node]]{
-				value:    newPath,
-				priority: -(newPath.Cost(d) + h(nb, dest)),
+				value:    cp,
+				priority: -(cp.Cost(d) + h(nb, dest)),
 			})
 		}
 	}
